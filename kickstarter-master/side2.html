@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="utf-8">
+
+    <title>TOLD</title>
+
+    <meta name="robots" content="All">
+    <meta name="author" content="Udgiver">
+    <meta name="copyright" content="Information om copyright">
+
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+
+<body style="background-color: #123456;">
+
+<div class="container">
+    <div class="row justify-content-center mt-5 mb-5">
+        <div class="col-6 text-center">
+            <a href="index.html">
+                <img src="img/logo.png" class="img-fluid" alt="Told Logo">
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<div class="container" style="color:white; font-size: 24px; font-family: 'Roboto', sans-serif;">
+    <div class="row justify-content-center mt-5">
+        <div class="col-6">
+            <div class="mb-3">
+                <label for="countryFrom" class="form-label">modtager land</label>
+                <select class="form-control" id="countryFrom">
+                    <option value="Danmark">Danmark</option>
+                    <option value="Sverige">Sverige</option>
+                    <option value="Norge">Norge</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="webshopInput" class="form-label">Wepshop</label>
+                <input type="text" id="webshopInput" class="form-control" placeholder="webshop navn...">
+            </div>
+
+            <div class="mb-3">
+                <input type="text" class="form-control" id="packageIdInput" placeholder="Indtast pakke ID">
+                <button id="fetchPackageData" class="btn btn-primary mt-2">Hent Pakke Data</button>
+            </div>
+            <div id="paymentContainer" class="mt-3" style="display:none;">
+                <p>Pakke Værdi: <span id="packageValue">0</span> kr.</p>
+                <button id="payPackage" class="btn btn-success">Betal</button>
+            </div>
+            <div id="receiptContainer" class="mt-3"></div>
+        </div>
+    </div>
+ </div>
+
+
+
+            <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('#fetchPackageData').addEventListener('click', function () {
+            const packageId = document.querySelector('#packageIdInput').value;
+
+            // Din kode til at hente data her...
+
+            console.log('Henter data for pakke ID:', packageId);
+            const packageValue = Math.floor(Math.random() * (1000 - 100 + 1) + 100); // Simuleret pakke værdi
+
+            document.getElementById('packageValue').textContent = packageValue;
+            document.getElementById('paymentContainer').style.display = 'block';
+        });
+
+        document.querySelector('#payPackage').addEventListener('click', function () {
+            // Spørg brugeren om at godkende betalingen
+            if (window.confirm('Godkend betaling?')) {
+                // Afspil betalingslyd fra en lokal kilde
+                const audio = new Audio('audio/lyd.mp3'); // Angiv den korrekte sti til din MP3-fil
+                audio.play();
+
+                // Viser kvitteringen
+                const receiptContainer = document.getElementById('receiptContainer');
+                receiptContainer.innerHTML = '<p>Kvittering: Betaling gennemført for pakkeværdi ' + document.getElementById('packageValue').textContent + ' kr.</p>';
+
+                // Efter betaling, skjul betalingsknappen og rens inputfeltet
+                document.getElementById('paymentContainer').style.display = 'none';
+                document.getElementById('packageIdInput').value = '';
+            } else {
+                // Hvis brugeren trykker "Annuller", kan du håndtere det her
+                console.log('Betaling annulleret');
+            }
+        });
+    });
+</script>
+
+
+</body>
+</html>

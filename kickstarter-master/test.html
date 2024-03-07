@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="utf-8">
+
+    <title>TOLD</title>
+
+    <meta name="robots" content="All">
+    <meta name="author" content="Udgiver">
+    <meta name="copyright" content="Information om copyright">
+
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-6">
+            <div class="mb-3">
+                <label for="countryFrom" class="form-label">Afsenderland</label>
+                <select class="form-control" id="CountryFrom">
+                    <option value="Danmark">Danmark</option>
+                    <option value="Sverige">Sverige</option>
+                    <option value="Norge">Norge</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="CounTryTo" class="form-label">Hvilke land</label>
+                <select class="form-control" id="CounTryTo">
+                    <option value="Norge">Norge</option>
+                    <option value="Island">Island</option>
+                    <option value="Schweiz">Schweiz</option>
+                    <option value="Storbritannien">Storbritannien</option>
+                    <option value="Tyrkiet">Tyrkiet</option>
+                    <option value="Rusland">Rusland</option>
+                    <option value="Ukraine">Ukraine</option>
+                    <option value="Serbien">Serbien</option>
+                    <option value="Albanien">Albanien</option>
+                    <option value="Nordmakedonien">Nordmakedonien</option>
+                    <option value="USA">USA</option>
+                    <option value="Canada">Canada</option>
+                    <option value="Brasilien">Brasilien</option>
+                    <option value="Indien">Indien</option>
+                    <option value="Kina">Kina</option>
+                    <option value="Australien">Australien</option>
+                    <option value="Sydafrika">Sydafrika</option>
+                    <option value="Japan">Japan</option>
+                    <option value="Sydkorea">Sydkorea</option>
+                    <option value="c">New Zealand</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="webshopInput" class="form-label">Online Webshop Name (Type or Select)</label>
+                <input type="text" class="form-control" id="webshopInput" list="webshopOptions" placeholder="Enter shop name here or select" oninput="updateShopInfo(this.value)">
+                <datalist id="webshopOptions">
+                    <option value="Amazon"></option>
+                    <option value="eBay"></option>
+                    <option value="AliExpress"></option>
+                    <option value="Walmart"></option>
+                    <option value="Rakuten"></option>
+                    <option value="Wildberries"></option>
+                    <option value="Vinted"></option>
+                    <option value="ASOS"></option>
+                    <option value="Myntra"></option>
+                    <option value="Poshmark"></option>
+                    <option value="ZOZOTOWN"></option>
+                    <option value="StockX"></option>
+                    <option value="Farfetch"></option>
+                    <option value="Newegg"></option>
+                </datalist>
+            </div>
+
+            <div id="shopInfo">
+                <p id="shopCountry">Country: N/A</p>
+                <p id="shopShippingValue">Shipping Value (in DKK): N/A</p>
+            </div>
+
+
+            <div class="container">
+                <div class="row justify-content-center mt-5">
+                    <div class="col-6">
+                        <div class="mb-3">
+                            <label for="packageValueInput" class="form-label">Indtast værdien på pakken</label>
+                            <input type="number" class="form-control" id="packageValueInput" min="0" max="100000" placeholder="Indtast værdien her">
+                        </div>
+                        <button id="calculateTold" class="btn btn-primary">Beregn Told</button>
+                        <div id="toldResultContainer" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+ <script>
+ document.addEventListener('DOMContentLoaded', function () {
+  document.querySelector('#calculateTold').addEventListener('click', function () {
+const packageValue = parseFloat(document.querySelector('#packageValueInput').value);
+const resultContainer = document.querySelector('#toldResultContainer');
+
+
+      const webshops = {
+          "Amazon": {country: "USA", shippingValue: 345},
+          "eBay": {country: "USA", shippingValue: 8},
+          "AliExpress": {country: "China", shippingValue: 5},
+          "Walmart": {country: "USA", shippingValue: 10},
+          "Rakuten": {country: "Japan", shippingValue: 12},
+          "Wildberries": {country: "Russia", shippingValue: 15},
+          "Vinted": {country: "Lithuania", shippingValue: 9},
+          "ASOS": {country: "United Kingdom", shippingValue: 7},
+          "Myntra": {country: "India", shippingValue: 6},
+          "Poshmark": {country: "USA", shippingValue: 10},
+          "ZOZOTOWN": {country: "Japan", shippingValue: 12},
+          "StockX": {country: "USA", shippingValue: 11},
+          "Farfetch": {country: "United Kingdom", shippingValue: 14},
+          "Newegg": {country: "USA", shippingValue: 10}
+      };
+
+      function updateShopInfo(shopName) {
+          const shopInfo = webshops[shopName];
+          const shopCountryElement = document.querySelector('#shopCountry');
+          const shopShippingValueElement = document.querySelector('#shopShippingValue');
+
+          if (shopInfo) {
+              shopCountryElement.textContent = `Country: ${shopInfo.country}`;
+              shopShippingValueElement.textContent = `Shipping Value (in DKK): ${shopInfo.shippingValue}`;
+          } else {
+              shopCountryElement.textContent = `Country: N/A`;
+              shopShippingValueElement.textContent = `Shipping Value (in DKK): N/A`;
+          }
+      }
+
+
+// Nulstiller resultContainer indhold og klasse
+resultContainer.innerHTML = '';
+resultContainer.className = 'mt-3';
+
+if (packageValue < 1150) {
+resultContainer.classList.add('p-3', 'bg-success', 'text-white');
+ resultContainer.innerHTML = `<strong>Toldfri</strong>`;
+} else if (packageValue >= 1150 && packageValue <= 100000) {
+ const moms = packageValue * 0.25;
+ const told = packageValue * 0.12;
+const gebyr = 160;
+const totalTold = moms + told + gebyr;
+resultContainer.classList.add('p-3', 'bg-danger', 'text-white');
+resultContainer.innerHTML = `
+<p>Moms: ${moms.toFixed(2)} kr.</p>
+<p>Told: ${told.toFixed(2)} kr.</p>
+<p>Gebyr: ${gebyr.toFixed(2)} kr.</p>
+<strong>Samlet Told: ${totalTold.toFixed(2)} kr.</strong>
+ `;
+} else {
+alert('Indtast en værdi mellem 0 og 100000 kr.');
+}
+});
+});
+</script>
+
+   </body>
+
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="utf-8">
+
+    <title>DinTOLD</title>
+
+    <meta name="robots" content="All">
+    <meta name="author" content="Udgiver">
+    <meta name="copyright" content="Information om copyright">
+
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body style="background-color: #123456;">
+
+<div class="container">
+    <div class="row justify-content-center mt-5 mb-5">
+        <div class="col-6 text-center">
+            <a href="index.html">
+                <img src="img/logo.png" class="img-fluid" alt="Told Logo">
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<div class="container" style="color:white; font-size: 24px; font-family: 'Roboto', sans-serif;">
+    <div class="row justify-content-center mt-5">
+        <div class="col-6">
+            <div class="mb-3">
+                <label for="countryFrom" class="form-label">modtager land</label>
+                <select class="form-control" id="countryFrom">
+                    <option value="Danmark">Danmark</option>
+                    <option value="Sverige">Sverige</option>
+                    <option value="Norge">Findland</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="roomType" class="form-label">Afsender land</label>
+                <select class="form-control" id="roomType">
+                    <option value="Norge" style="background-color: #333; color: white;">Norge</option>
+                    <option value="Island" style="background-color: #333; color: white;">Island</option>
+                    <option value="Schweiz" style="background-color: #333; color: white;">Schweiz</option>
+                    <option value="Storbritannien" style="background-color: #333; color: white;">Storbritannien</option>
+                    <option value="Tyrkiet" style="background-color: #333; color: white;">Tyrkiet</option>
+                    <option value="Rusland" style="background-color: #333; color: white;">Rusland</option>
+                    <option value="Ukraine" style="background-color: #333; color: white;">Ukraine</option>
+                    <option value="Serbien" style="background-color: #333; color: white;">Serbien</option>
+                    <option value="Albanien" style="background-color: #333; color: white;">Albanien</option>
+                    <option value="Nordmakedonien" style="background-color: #333; color: white;">Nordmakedonien</option>
+                    <option value="USA" style="background-color: #333; color: white;">USA</option>
+                    <option value="Canada" style="background-color: #333; color: white;">Canada</option>
+                    <option value="Brasilien" style="background-color: #333; color: white;">Brasilien</option>
+                    <option value="Indien" style="background-color: #333; color: white;">Indien</option>
+                    <option value="Kina" style="background-color: #333; color: white;">Kina</option>
+                    <option value="Australien" style="background-color: #333; color: white;">Australien</option>
+                    <option value="Sydafrika" style="background-color: #333; color: white;">Sydafrika</option>
+                    <option value="Japan" style="background-color: #333; color: white;">Japan</option>
+                    <option value="Sydkorea" style="background-color: #333; color: white;">Sydkorea</option>
+                    <option value="c" style="background-color: #333; color: white;">New Zealand</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="webshopInput" class="form-label">Wepshop</label>
+                <input type="text" id="webshopInput" class="form-control" placeholder="webshop navn...">
+            </div>
+            <div class="mb-3">
+                <label for="packageValueInput" class="form-label"></label>
+                <input type="number" class="form-control" id="packageValueInput" min="0" max="100000" placeholder="Indtast værdien her">
+            </div>
+            <button id="calculateTold" class="btn btn-primary">Beregn Told</button>
+            <div id="toldResultContainer" class="mt-3"></div>
+        </div>
+    </div>
+</div>
+
+
+            <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Funktion til justering af resultContainer baseret på skærmstørrelse
+                    function adjustResultContainer() {
+                        const resultContainer = document.querySelector('#toldResultContainer');
+                        if (window.innerWidth < 768) { // Antager mobilvisning for skærmbredder under 768px
+                            resultContainer.style.width = '100%'; // Gør boksen bredere for at fylde skærmen
+                            resultContainer.style.height = 'auto'; // Juster højden dynamisk
+                            resultContainer.style.padding = '20px'; // Større padding for bedre læsbarhed på små skærme
+                        } else {
+                            // Tilbage til standard desktop-størrelse
+                            resultContainer.style.width = '200px';
+                            resultContainer.style.height = '200px';
+                            resultContainer.style.padding = '10px';
+                        }
+                    }
+
+                    // Initial justering og genjustering ved skærmstørrelsesændring
+                    adjustResultContainer();
+                    window.addEventListener('resize', adjustResultContainer);
+
+                    // Toldberegner event listener
+                    document.querySelector('#calculateTold').addEventListener('click', function () {
+                        const packageValue = parseFloat(document.querySelector('#packageValueInput').value);
+                        const resultContainer = document.querySelector('#toldResultContainer');
+
+                        // Grundlæggende nulstilling af resultContainer
+                        resultContainer.innerHTML = '';
+                        resultContainer.style.margin = '20px auto'; // Centrerer boksen
+                        resultContainer.style.borderRadius = '10px'; // Tilføjer bløde kanter
+
+                        // Tilpasser baggrund og tekstfarve baseret på pakkeværdi
+                        if (packageValue < 1150) {
+                            resultContainer.style.backgroundColor = '#28a745'; // Grøn for toldfri
+                            resultContainer.style.color = 'white';
+                            resultContainer.textContent = 'Toldfri'; // Simpel tekst, der passer ind i boksen
+                        } else if (packageValue >= 1150 && packageValue <= 100000) {
+                            resultContainer.style.backgroundColor = '#dc3545'; // Rød for betaling af told
+                            resultContainer.style.color = 'white';
+                            // Beregner og viser toldoplysninger i en enkel tekstformat
+                            const moms = packageValue * 0.25;
+                            const told = packageValue * 0.12;
+                            const gebyr = 160;
+                            const totalTold = moms + told + gebyr;
+                            resultContainer.textContent = `Moms: ${moms.toFixed(2)} kr, Told: ${told.toFixed(2)} kr, Gebyr: ${gebyr.toFixed(2)} kr, Samlet Told: ${totalTold.toFixed(2)} kr.`;
+                        } else {
+                            alert('Indtast en værdi mellem 0 og 100000 kr.');
+                        }
+                    });
+                });
+            </script>
+
+</body>
+</html>
